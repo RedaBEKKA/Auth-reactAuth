@@ -1,112 +1,91 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
+
+import {ActivityIndicator,View} from "react-native"
 
 import React from 'react';
-import type {Node} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import MainTabScreen from "./src/MainTabScreen"
+import {DrawerContent} from "./src/DrawerContent"
+import SupportScreen from "./src/SupportScreen"
+import SettingsScreen from "./src/SettingsScreen"
+import BookmarkScreen from "./src/BookmarkScreen"
+import RootStackScreen from "./src/RootStackScreen"
+import { AuthContext } from "./components/context";
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+const Drawer = createDrawerNavigator()
+//7708be4e-5fd2-447b-8fe6-3846b76bbd24
+const App = () => {
+  const [isLoading, setIsLoading] = React.useState(true);
+  const [userToken, setUserToken] = React.useState(null); 
+  React.useEffect(() => {
+    setTimeout(()=>{
+      setIsLoading(false)
+    },1000)
+   }, []) 
+  
+  const authContext = React.useMemo(() => ({
+    signIn: async(foundUser) => {
+      setUserToken('fgkj');
+      setIsLoading(false);
+      // const userToken = String(foundUser[0].userToken);
+      // const userName = foundUser[0].username;
+      
+      // try {
+      //   await AsyncStorage.setItem('userToken', userToken);
+      // } catch(e) {
+      //   console.log(e);
+      // }
+      // // console.log('user token: ', userToken);
+      // dispatch({ type: 'LOGIN', id: userName, token: userToken });
+    },
+    signOut: async() => {
+      setUserToken(null);
+      setIsLoading(false);
+    //   try {
+    //     await AsyncStorage.removeItem('userToken');
+    //   } catch(e) {
+    //     console.log(e);
+    //   }
+    //   dispatch({ type: 'LOGOUT' });
+     },
+    signUp: () => {
+      setUserToken('fgkj');
+      setIsLoading(false);
+    },
+    // toggleTheme: () => {
+    //   setIsDarkTheme( isDarkTheme => !isDarkTheme );
+    // }
+  }), []);
 
-const Section = ({children, title}): Node => {
-  const isDarkMode = useColorScheme() === 'dark';
+  if(isLoading){
+    return(
+      <View style={{flex:1,justifyContent:"center",alignItems:'center'}}>
+        <ActivityIndicator size="large" color="#000"/>
+      </View>
+    )
+  }
+  
+
+ 
+  
   return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
+    <AuthContext.Provider value={authContext}>
+    <NavigationContainer>
+    
+      {userToken !== null ?(
+        <Drawer.Navigator drawerContent={props=><DrawerContent {...props} />}>
+        <Drawer.Screen name="Home" component={MainTabScreen} />
+        <Drawer.Screen name="SupportScreen" component={SupportScreen} />
+        <Drawer.Screen name="SettingsScreen" component={SettingsScreen} />
+        <Drawer.Screen name="BookmarkScreen" component={BookmarkScreen} />
+      </Drawer.Navigator>)
+      :
+      <RootStackScreen/>
+      }
+     
+    </NavigationContainer>
+    </AuthContext.Provider>
   );
 };
-
-const App: () => Node = () => {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
-  return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.js</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
-  );
-};
-
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
 
 export default App;
