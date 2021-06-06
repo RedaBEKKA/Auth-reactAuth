@@ -5,6 +5,7 @@ import {
     DrawerItem
 }from "@react-navigation/drawer"
 import {
+    useTheme,
     Avatar,
     Title,
     Caption,
@@ -14,17 +15,15 @@ import {
     TouchableRipple,
     Switch
 }from "react-native-paper";
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import {AuthContext} from "../components/context"
 
 
 export function DrawerContent(props){
-    const [isDarkTheme,setIsDarkTheme] = React.useState(false);
-    const toggleTheme=()=>{
-        setIsDarkTheme(!isDarkTheme);
-    }
+  
+    const paperTheme = useTheme();
 
-    const {signOut} = React.useContext(AuthContext)
+    const {signOut,toggleTheme} = React.useContext(AuthContext)
     return(
         <View style={{flex:1}}>
             <DrawerContentScrollView {...props}>
@@ -38,55 +37,68 @@ export function DrawerContent(props){
                                 size={50}
                             />
                             <View style={{marginLeft:15, flexDirection:'column'}}>
-                                <Title style={styles.title}>Reda BEKKA</Title>
-                                <Caption style={styles.caption}>@R_BEKKA</Caption>
+                                <Title style={styles.title}>Nom du resto</Title>
+                                <Caption style={styles.caption}>Live Resto</Caption>
                             </View>
                         </View>
-                        <View style={styles.row}>
-                            <View style={styles.section}>
-                                <Paragraph style={[styles.paragraph, styles.caption]}>80</Paragraph>
-                                <Caption style={styles.caption}>Suivre</Caption>
-                            </View>
-                            <View style={styles.section}>
-                                <Paragraph style={[styles.paragraph, styles.caption]}>100</Paragraph>
-                                <Caption style={styles.caption}>Followers</Caption>
-                            </View>
-                        </View>
+                        
                     </View>
 
                     <Drawer.Section style={styles.drawerSection}>
                         <DrawerItem 
                             icon={({color, size}) => (
                                 <Icon 
-                                name="home-outline" 
+                                name="home" 
                                 color={color}
                                 size={size}
                                 />
                             )}
-                            label="Home"
+                            label="Acceuil"
                             onPress={() => {props.navigation.navigate('Home')}}
                         />
                         <DrawerItem 
                             icon={({color, size}) => (
                                 <Icon 
-                                name="account-outline" 
+                                name="pending" 
                                 color={color}
                                 size={size}
                                 />
                             )}
-                            label="Profile"
+                            label="Commandes en cours"
                             onPress={() => {props.navigation.navigate('Profile')}}
                         />
                         <DrawerItem 
                             icon={({color, size}) => (
                                 <Icon 
-                                name="bookmark-outline" 
+                                name="done-all" 
                                 color={color}
                                 size={size}
                                 />
                             )}
-                            label="Bookmarks"
-                            onPress={() => {props.navigation.navigate('BookmarkScreen')}}
+                            label="Commandes terminé"
+                            onPress={() => {props.navigation.navigate('Profile')}}
+                        />
+                        <DrawerItem 
+                            icon={({color, size}) => (
+                                <Icon 
+                                name="watch-later" 
+                                color={color}
+                                size={size}
+                                />
+                            )}
+                            label="Horraire d'ouvertures"
+                            onPress={() => {props.navigation.navigate('SupportScreen')}}
+                        />
+                        <DrawerItem 
+                            icon={({color, size}) => (
+                                <Icon 
+                                name="calendar-today" 
+                                color={color}
+                                size={size}
+                                />
+                            )}
+                            label="Fermetures exceptionelles"
+                            onPress={() => {props.navigation.navigate('SupportScreen')}}
                         />
                         <DrawerItem 
                             icon={({color, size}) => (
@@ -96,31 +108,35 @@ export function DrawerContent(props){
                                 size={size}
                                 />
                             )}
-                            label="Settings"
+                            label="Paramétres"
                             onPress={() => {props.navigation.navigate('SettingsScreen')}}
                         />
                         <DrawerItem 
                             icon={({color, size}) => (
                                 <Icon 
-                                name="account-check-outline" 
+                                name="help" 
                                 color={color}
                                 size={size}
                                 />
                             )}
-                            label="Support"
+                            label="Aide"
                             onPress={() => {props.navigation.navigate('SupportScreen')}}
                         />
                     </Drawer.Section>
                     <Drawer.Section title="Preferences">
                         <TouchableRipple onPress={() => {toggleTheme()}}>
-                            <View style={styles.preference}>
-                                <Text>Dark Theme</Text>
+                            <View style={styles.preferences}>
+                                <Text>Pret a recevoir les commandes</Text>
                                 <View pointerEvents="none">
-                                    <Switch value={isDarkTheme}/>
+                                    <Switch value={paperTheme.dark}/>
                                 </View>
                             </View>
                         </TouchableRipple>
                     </Drawer.Section>
+                    <Text style={{padding:5,fontWeight:'bold'}}>
+                        Besoin d'aide appellez nous sur 0782205066
+                    </Text>
+                    
                 </View>
             </DrawerContentScrollView>
             <Drawer.Section style={styles.bottomDrawerSection}>
@@ -183,4 +199,14 @@ const styles = StyleSheet.create({
       paddingVertical: 12,
       paddingHorizontal: 16,
     },
+    preferences: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        fontWeight:'600',
+        paddingVertical: 12,
+        paddingHorizontal: 16,
+        color:'#fff',
+        backgroundColor:'#087',
+        
+      },
   });

@@ -10,7 +10,7 @@ import {
     Alert
 } from 'react-native';
 import {Button} from "native-base"
-
+import SignUpScreen from "./SignUpScreen"
 import * as Animatable from 'react-native-animatable';
 import LinearGradient from 'react-native-linear-gradient';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -95,8 +95,9 @@ const SignInScreen = ({navigation}) => {
                 })
             }).then(res=>res.json())
             .then(resData=>{
-                alert(resData)
+                alert(resData.establishment.token)
                 console.log(data.login,data.password,resData);
+                setMessage(resData.establishment.token)
                 
             })
         }
@@ -116,27 +117,27 @@ const SignInScreen = ({navigation}) => {
     //     }
     // }
 
-    // const loginHandle = (userName, password) => {
+    const loginHandle = (userName, password) => {
 
-    //     const foundUser = Users.filter( item => {
-    //         return userName == item.username && password == item.password;
-    //     } );
+        const foundUser = Users.filter( item => {
+            return userName == item.username && password == item.password;
+        } );
 
-    //     if ( data.username.length == 0 || data.password.length == 0 ) {
-    //         Alert.alert('Wrong Input!', 'Username or password field cannot be empty.', [
-    //             {text: 'Okay'}
-    //         ]);
-    //         return;
-    //     }
+        if ( data.login.length == 0 || data.password.length == 0 ) {
+            Alert.alert('Wrong Input!', 'Username or password field cannot be empty.', [
+                {text: 'Okay'}
+            ]);
+            return;
+        }
 
-    //     if ( foundUser.length == 0 ) {
-    //         Alert.alert('Invalid User!', 'Username or password is incorrect.', [
-    //             {text: 'Okay'}
-    //         ]);
-    //         return;
-    //     }
-    //     signIn(foundUser);
-    // }
+        if ( foundUser.length == 0 ) {
+            Alert.alert('Invalid User!', 'Username or password is incorrect.', [
+                {text: 'Okay'}
+            ]);
+            return;
+        }
+        signIn(foundUser);
+    }
 
     return (
       <View style={styles.container}>
@@ -217,7 +218,7 @@ const SignInScreen = ({navigation}) => {
                 >
                     <View style={styles.button}>
                     
-                        <Button full style={{backgroundColor:"#08d4c4"}}  onPress={()=>{signIn()}}>
+                        <Button full style={{backgroundColor:"#08d4c4"}}  onPress={()=>{signIn()}}>{/*signIn()*/}
                             <Text style={styles.textSign,{
                                         color:'#fff'
                                     }}>
@@ -228,6 +229,8 @@ const SignInScreen = ({navigation}) => {
                    
                         
                 </View>
+
+                
                 </TouchableOpacity>
               
         </Animatable.View>

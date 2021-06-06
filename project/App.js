@@ -2,21 +2,85 @@
 import {ActivityIndicator,View} from "react-native"
 
 import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer,DarkTheme,DefaultTheme as NavigationDefaultTheme } from '@react-navigation/native';
+import {Provider as PaperProvider,DarkTheme as PaperDarkTheme,DefaultTheme as PaperDefaultTheme} from "react-native-paper"
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import MainTabScreen from "./src/MainTabScreen"
 import {DrawerContent} from "./src/DrawerContent"
 import SupportScreen from "./src/SupportScreen"
 import SettingsScreen from "./src/SettingsScreen"
-import BookmarkScreen from "./src/BookmarkScreen"
+import ExploreScreen from "./src/ExploreScreen"
 import RootStackScreen from "./src/RootStackScreen"
 import { AuthContext } from "./components/context";
 
 const Drawer = createDrawerNavigator()
 //7708be4e-5fd2-447b-8fe6-3846b76bbd24
 const App = () => {
+  const [isDarkTheme,setIsDarkTheme] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(true);
   const [userToken, setUserToken] = React.useState(null); 
+
+  const CustomDefaultTheme = {
+    ...NavigationDefaultTheme,
+    ...PaperDefaultTheme,
+    colors: {
+      ...NavigationDefaultTheme.colors,
+      ...PaperDefaultTheme.colors,
+      background: '#ffffff',
+      text: '#333333'
+    }
+  }
+  
+  const CustomDarkTheme = {
+    ...DarkTheme,
+    ...PaperDarkTheme,
+    colors: {
+      ...DarkTheme.colors,
+      ...PaperDarkTheme.colors,
+      background: '#333333',
+      text: '#ffffff'
+    }
+  }
+  const theme = isDarkTheme ? CustomDarkTheme : CustomDefaultTheme;
+
+  // const initialLoginState = {
+  //   isLoading: true,
+  //   login: null,
+  //   userToken: null,
+  // };
+
+  // const loginReducer = (prevState, action) => {
+  //   switch( action.type ) {
+  //     case 'RETRIEVE_TOKEN': 
+  //       return {
+  //         ...prevState,
+  //         userToken: action.token,
+  //         isLoading: false,
+  //       };
+  //     case 'LOGIN': 
+  //       return {
+  //         ...prevState,
+  //         login: action.id,
+  //         userToken: action.token,
+  //         isLoading: false,
+  //       };
+  //     case 'LOGOUT': 
+  //       return {
+  //         ...prevState,
+  //         login: null,
+  //         userToken: null,
+  //         isLoading: false,
+  //       };
+  //     case 'REGISTER': 
+  //       return {
+  //         ...prevState,
+  //         login: action.id,
+  //         userToken: action.token,
+  //         isLoading: false,
+  //       };
+  //   }
+  // };
+
   React.useEffect(() => {
     setTimeout(()=>{
       setIsLoading(false)
@@ -52,9 +116,9 @@ const App = () => {
       setUserToken('fgkj');
       setIsLoading(false);
     },
-    // toggleTheme: () => {
-    //   setIsDarkTheme( isDarkTheme => !isDarkTheme );
-    // }
+    toggleTheme: () => {
+      setIsDarkTheme( isDarkTheme => !isDarkTheme );
+    }
   }), []);
 
   if(isLoading){
@@ -69,22 +133,25 @@ const App = () => {
  
   
   return (
-    <AuthContext.Provider value={authContext}>
-    <NavigationContainer>
-    
-      {userToken !== null ?(
-        <Drawer.Navigator drawerContent={props=><DrawerContent {...props} />}>
-        <Drawer.Screen name="Home" component={MainTabScreen} />
-        <Drawer.Screen name="SupportScreen" component={SupportScreen} />
-        <Drawer.Screen name="SettingsScreen" component={SettingsScreen} />
-        <Drawer.Screen name="BookmarkScreen" component={BookmarkScreen} />
-      </Drawer.Navigator>)
-      :
-      <RootStackScreen/>
-      }
-     
-    </NavigationContainer>
+    <PaperProvider theme={theme}>
+         <AuthContext.Provider value={authContext}>
+            <NavigationContainer theme={theme}>
+            
+              {userToken !== null ?(
+                <Drawer.Navigator drawerContent={props=><DrawerContent {...props} />}>
+                <Drawer.Screen name="Home" component={MainTabScreen} />
+                <Drawer.Screen name="SupportScreen" component={SupportScreen} />
+                <Drawer.Screen name="SettingsScreen" component={SettingsScreen} />
+                <Drawer.Screen name="ExploreScreen" component={ExploreScreen} />
+              </Drawer.Navigator>)
+              :
+              <RootStackScreen/>
+              }
+            
+            </NavigationContainer>
     </AuthContext.Provider>
+    </PaperProvider>
+   
   );
 };
 

@@ -8,8 +8,11 @@ import Icon from 'react-native-vector-icons/Ionicons';
 
 import HomeScreen from './HomeScreen';
 import DetailsScreen from './DetailsScreen';
-import ExploreScreen from './ExploreScreen';
+import SettingsScreen from "./SettingsScreen"
 import ProfileScreen from './ProfileScreen';
+import { View } from 'native-base';
+import { Avatar } from 'react-native-paper';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const HomeStack = createStackNavigator();
 const DetailsStack = createStackNavigator();
@@ -56,12 +59,12 @@ const MainTabScreen = () => (
       />
       <Tab.Screen
         name="Explore"
-        component={ExploreScreen}
+        component={SettingsScreen}
         options={{
-          tabBarLabel: 'Explore',
+          tabBarLabel: 'Paramétres',
           tabBarColor: '#d02860',
           tabBarIcon: ({ color }) => (
-            <Icon name="ios-aperture" color={color} size={26} />
+            <Icon name="settings" color={color} size={26} />
           ),
         }}
       />
@@ -73,17 +76,35 @@ export default MainTabScreen;
 const HomeStackScreen = ({navigation}) => (
 <HomeStack.Navigator screenOptions={{
         headerStyle: {
-        backgroundColor: '#5dbca3',
+        backgroundColor: '#eee',
         },
-        headerTintColor: '#fff',
+        headerTintColor: '#333',
         headerTitleStyle: {
         fontWeight: 'bold'
         }
     }}>
         <HomeStack.Screen name="Home" component={HomeScreen} options={{
-        title:'Overview',
+        title:'Acceuil',
         headerLeft: () => (
-            <Icon.Button name="ios-menu" size={25} backgroundColor="#5dbca3" onPress={() => navigation.toggleDrawer()}></Icon.Button>
+          <View>
+              <Icon.Button name="ios-menu" color="#000" size={22} backgroundColor="#eee" onPress={() => navigation.toggleDrawer()}></Icon.Button>
+             
+          </View>
+            
+        ),
+        headerRight:()=>(
+         <View style={{flexDirection:'row',marginRight:10}}>
+               <Icon.Button name="ios-search" size={27} color="#333" backgroundColor="#eee"></Icon.Button>
+               <TouchableOpacity style={{paddingHorizontal:10,marginTop:12}} onPress={()=>{navigation.navigate('Profile')}}>
+                  <Avatar.Image 
+                      source={{
+                        uri:"https://media-exp1.licdn.com/dms/image/C4E03AQGuEgvJ413ZNg/profile-displayphoto-shrink_800_800/0/1599644811136?e=1625702400&v=beta&t=NbRy7HBlwn3l59FRtZU292HnDvU4PtPcEjtMKGcBkhI"
+                      }}
+                      size={35}
+                  />
+               </TouchableOpacity>
+             
+         </View>
         )
         }} />
 </HomeStack.Navigator>
@@ -101,8 +122,12 @@ const DetailsStackScreen = ({navigation}) => (
     }}>
         <DetailsStack.Screen name="Details" component={DetailsScreen} options={{
         headerLeft: () => (
-            <Icon.Button name="ios-menu" size={25} backgroundColor="#aac840" onPress={() => navigation.openDrawer()}></Icon.Button>
-        )
+          <View style={{marginLeft:10}}>
+               <Icon.Button name="ios-menu" size={25} backgroundColor="#aac840" onPress={() => navigation.openDrawer()}></Icon.Button>
+          </View>
+           
+        ),
+      
         }} />
 </DetailsStack.Navigator>
 );

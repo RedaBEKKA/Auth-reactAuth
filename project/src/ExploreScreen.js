@@ -1,14 +1,17 @@
-import React from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
+import React,{useState } from 'react';
+import { View, Text, Switch, StyleSheet } from 'react-native';
 
 const ExploreScreen = () => {
+  const [isSwitch,setSwitch] = useState();
     return (
       <View style={styles.container}>
-        <Text>ExploreScreen</Text>
-        <Button
-          title="Click Here"
-          onPress={() => alert('Button Clicked!')}
-        />
+        <Text>Impression</Text>
+        <Switch
+          value={true}
+          onValueChange={(value) => setSwitch(value)}
+          trackColor={{true:'red'}}
+         />
+        
       </View>
     );
 };
@@ -19,6 +22,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1, 
     alignItems: 'center', 
-    justifyContent: 'center'
+    paddingTop:50
+    
   },
 });
